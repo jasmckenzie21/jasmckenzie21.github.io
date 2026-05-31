@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jasmine McKenzie — Human-Centered Computing PhD Student</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #fdf7f9;
+      --warm-white: #fffafc;
+      --sand: #ead4dd;
+      --rose: #b56576;
+      --rose-dark: #8a3a4f;        /* WCAG AA on cream/white backgrounds */
+      --plum: #5d3a5e;
+      --plum-light: #7a5079;
+      --lavender: #c8b4d6;
+      --mauve: #9b7aa3;
+      --ink: #2a1f2c;
+      --ink-mid: #4a3a4a;           /* meets AA on cream backgrounds */
+      --ink-soft: #5d4d57;          /* darkened from #7a6b76 to meet AA */
+      --tag-bg: #f1e3ea;
+      --tag-lavender: #ebe0f0;
+      --gold-dark: #8a6a1a;          /* darkened gold for AA contrast on white */
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── SKIP LINK (a11y) ── */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      background: var(--plum);
+      color: #fff;
+      padding: 0.75rem 1.2rem;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      z-index: 200;
+      border-radius: 0 0 4px 0;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* ── FOCUS STATES (a11y) ── */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--plum);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    #contact a:focus-visible,
+    .skip-link:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+
+    /* ── REDUCED MOTION (a11y) ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(253, 247, 249, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sand);
+    }
+    .nav-logo {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--plum);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover,
+    .nav-links a:focus-visible { color: var(--rose-dark); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      gap: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -10%; right: -5%;
+      width: 55vw; height: 110vh;
+      background: radial-gradient(ellipse at 70% 40%, #ead4dd 0%, transparent 70%),
+                  radial-gradient(ellipse at 30% 80%, #d8c3e0 0%, transparent 60%);
+      opacity: 0.6;
+      z-index: 0;
+    }
+    .hero-text { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--rose-dark); font-weight: 600;
+      margin-bottom: 1.4rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 28px; height: 1.5px;
+      background: var(--rose-dark);
+    }
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--plum);
+    }
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--ink-mid);
+      margin: 1.2rem 0 2rem;
+      max-width: 480px;
+      font-weight: 400;
+      line-height: 1.75;
+    }
+    .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--plum);
+      color: #fff;
+      padding: 0.75rem 1.8rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--plum-light); transform: translateY(-1px); }
+    .btn-outline {
+      border: 2px solid var(--plum);
+      color: var(--plum);
+      padding: 0.7rem 1.8rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-outline:hover { background: var(--plum); color: #fff; transform: translateY(-1px); }
+
+    .hero-card {
+      position: relative; z-index: 1;
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 40px rgba(93, 58, 94, 0.1), 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .hero-card-header {
+      display: flex; align-items: center; gap: 1.2rem;
+      margin-bottom: 1.8rem;
+    }
+    .avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--plum) 0%, var(--mauve) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Lora', serif;
+      font-size: 1.6rem; font-weight: 600;
+      color: #fff; flex-shrink: 0;
+      letter-spacing: -0.02em;
+    }
+    .hero-card-name { font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 600; }
+    .hero-card-role { font-size: 0.85rem; color: var(--ink-mid); margin-top: 0.2rem; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .stat-item {
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+    }
+    .stat-num {
+      font-family: 'Lora', serif;
+      font-size: 1.7rem; font-weight: 700;
+      color: var(--rose-dark);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--ink-mid); margin-top: 0.1rem; font-weight: 500; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; list-style: none; }
+    .tag {
+      background: var(--tag-bg);
+      color: var(--ink);
+      font-size: 0.78rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .tag.plum { background: var(--tag-lavender); color: var(--plum); }
+    .tag.rose { background: #f5dde6; color: var(--rose-dark); }
+
+    /* ── SECTION BASE ── */
+    section { padding: 5rem 4rem; }
+    .section-label {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--rose-dark); font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .section-label::after {
+      content: ''; flex: 1; max-width: 40px;
+      height: 1px; background: var(--rose-dark); opacity: 0.7;
+    }
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 600; line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .section-intro {
+      color: var(--ink-mid); font-size: 1rem;
+      max-width: 560px; line-height: 1.7; margin-bottom: 3rem;
+      font-weight: 400;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--warm-white); border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand); }
+    .about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; }
+    .about-text p { color: var(--ink-mid); line-height: 1.85; margin-bottom: 1.2rem; font-size: 0.97rem; font-weight: 400; }
+    .about-text p strong { color: var(--ink); font-weight: 600; }
+    .interests-list { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; }
+    .interests-list li {
+      display: flex; align-items: flex-start; gap: 0.8rem;
+      font-size: 0.92rem; color: var(--ink-mid);
+    }
+    .interests-list li::before {
+      content: '→';
+      color: var(--rose-dark);
+      font-size: 0.9rem;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+    .about-aside h3 {
+      font-family: 'Lora', serif; font-size: 1.1rem;
+      margin-bottom: 1.2rem; color: var(--plum);
+    }
+    .edu-item { margin-bottom: 1.5rem; }
+    .edu-degree { font-weight: 600; font-size: 0.92rem; }
+    .edu-school { font-size: 0.88rem; color: var(--rose-dark); margin-top: 0.15rem; font-weight: 500; }
+    .edu-year { font-size: 0.8rem; color: var(--ink-mid); margin-top: 0.1rem; font-family: 'DM Mono', monospace; font-weight: 500; }
+    .edu-extra { font-size: 0.82rem; color: var(--ink-mid); margin-top: 0.3rem; font-weight: 400; }
+    .skills-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; list-style: none; }
+
+    /* ── RESEARCH INTERESTS CARDS ── */
+    #interests-section { background: var(--cream); }
+    .interests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; list-style: none; }
+    .interest-card {
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: box-shadow 0.25s, transform 0.2s;
+    }
+    .interest-card:hover {
+      box-shadow: 0 12px 40px rgba(93, 58, 94, 0.1);
+      transform: translateY(-3px);
+    }
+    .interest-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.1rem;
+      background: var(--tag-lavender);
+    }
+    .interest-card h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem; font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--plum);
+    }
+    .interest-card p {
+      font-size: 0.92rem; color: var(--ink-mid);
+      line-height: 1.7; font-weight: 400;
+      margin-bottom: 1.1rem;
+    }
+    .interest-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; list-style: none; }
+
+    /* ── EXPERIENCE / TABS ── */
+    #experience { background: var(--warm-white); border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand); }
+    .exp-tabs {
+      display: flex; gap: 0; margin-bottom: 2.5rem;
+      border-bottom: 1.5px solid var(--sand);
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: none; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem; font-weight: 600;
+      color: var(--ink-mid);
+      padding: 0.8rem 1.4rem;
+      letter-spacing: 0.04em;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1.5px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab-btn[aria-selected="true"] { color: var(--plum); border-bottom-color: var(--plum); }
+    .tab-btn:hover { color: var(--plum); }
+    .exp-tab-content { display: none; }
+    .exp-tab-content.active { display: block; }
+
+    .timeline { max-width: 820px; position: relative; list-style: none; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 7px; top: 6px; bottom: 0;
+      width: 1.5px;
+      background: linear-gradient(to bottom, var(--sand), transparent);
+    }
+    .timeline-item {
+      padding-left: 3rem;
+      padding-bottom: 2.5rem;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute; left: 0; top: 6px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--warm-white);
+      border: 2.5px solid var(--plum);
+    }
+    .timeline-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem; color: var(--rose-dark); font-weight: 600;
+      margin-bottom: 0.4rem; letter-spacing: 0.04em;
+    }
+    .timeline-role {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem; font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+    .timeline-org { font-size: 0.9rem; color: var(--plum); font-weight: 600; margin-bottom: 0.2rem; }
+    .timeline-project { font-size: 0.85rem; color: var(--ink-mid); font-style: italic; margin-bottom: 0.6rem; font-weight: 500; }
+    .timeline-desc { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.75; font-weight: 400; }
+    .timeline-desc ul { list-style: none; padding: 0; margin-top: 0.4rem; }
+    .timeline-desc li {
+      padding-left: 1rem; position: relative; margin-bottom: 0.45rem;
+    }
+    .timeline-desc li::before {
+      content: '·';
+      position: absolute; left: 0.2rem; top: -0.1rem;
+      color: var(--rose-dark); font-weight: 700; font-size: 1.2rem;
+    }
+    .timeline-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.8rem; list-style: none; }
+
+    /* ── RESEARCH ── */
+    #research { background: var(--cream); }
+    .papers-list { display: flex; flex-direction: column; gap: 1.5rem; max-width: 920px; list-style: none; }
+    .paper-item {
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      padding: 1.8rem 2rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      transition: box-shadow 0.2s;
+    }
+    .paper-item:hover { box-shadow: 0 6px 24px rgba(93, 58, 94, 0.08); }
+    .paper-year {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--rose-dark);
+      font-weight: 700;
+      padding-top: 0.2rem;
+      min-width: 38px;
+    }
+    .paper-authors {
+      font-size: 0.88rem; color: var(--ink-mid);
+      margin-bottom: 0.4rem; font-weight: 400;
+    }
+    .paper-authors strong { color: var(--plum); font-weight: 700; }
+    .paper-title {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem; font-weight: 600;
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+    }
+    .paper-title .award {
+      display: inline-block;
+      background: var(--gold-dark);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+      font-weight: 600;
+      font-style: normal;
+    }
+    .paper-venue {
+      font-size: 0.85rem;
+      color: var(--ink-mid);
+      font-style: italic;
+      margin-bottom: 0.8rem;
+    }
+    .paper-link {
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--plum); text-decoration: none;
+      border: 1.5px solid currentColor;
+      padding: 0.35rem 0.8rem; border-radius: 4px;
+      transition: background 0.15s, color 0.15s;
+      display: inline-block;
+    }
+    .paper-link:hover,
+    .paper-link:focus-visible { background: var(--plum); color: #fff; }
+
+    /* ── HONORS ── */
+    #honors { background: var(--warm-white); border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand); }
+    .honors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; list-style: none; }
+    .honor-card {
+      background: var(--cream);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      padding: 1.8rem;
+      border-left: 3px solid var(--rose-dark);
+      transition: box-shadow 0.2s;
+    }
+    .honor-card:hover { box-shadow: 0 6px 20px rgba(93, 58, 94, 0.08); }
+    .honor-name {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem; font-weight: 600;
+      margin-bottom: 0.3rem; line-height: 1.35;
+    }
+    .honor-org {
+      font-size: 0.82rem; color: var(--rose-dark);
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+    }
+    .honor-desc { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.6; font-weight: 400; margin-bottom: 0.8rem; }
+    .honor-link {
+      font-size: 0.82rem; color: var(--plum); text-decoration: underline;
+      font-weight: 600; text-underline-offset: 3px;
+    }
+    .honor-link:hover { color: var(--rose-dark); }
+
+    /* ── GALLERY ── */
+    #gallery { background: var(--cream); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.4rem;
+      list-style: none;
+    }
+    .gallery-item {
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(93, 58, 94, 0.12);
+    }
+    .gallery-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: var(--lavender);
+    }
+    .gallery-caption {
+      padding: 1.1rem 1.3rem 1.4rem;
+    }
+    .gallery-title {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--plum);
+      margin-bottom: 0.3rem;
+      line-height: 1.35;
+    }
+    .gallery-desc {
+      font-size: 0.88rem;
+      color: var(--ink-mid);
+      line-height: 1.55;
+      font-weight: 400;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--plum);
+      color: #fff;
+      text-align: center;
+      padding: 6rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    #contact::before {
+      content: '';
+      position: absolute;
+      top: -30%; left: -10%;
+      width: 60vw; height: 80vh;
+      background: radial-gradient(ellipse, rgba(200, 180, 214, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #contact::after {
+      content: '';
+      position: absolute;
+      bottom: -30%; right: -10%;
+      width: 50vw; height: 70vh;
+      background: radial-gradient(ellipse, rgba(255, 220, 232, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #contact > * { position: relative; z-index: 1; }
+    #contact .section-label { justify-content: center; color: #fce4ee; }
+    #contact .section-label::after { background: #fce4ee; }
+    #contact h2 { color: #fff; }
+    #contact .section-intro { color: #f5e6ee; max-width: 480px; margin: 0.8rem auto 2.5rem; }
+    .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .contact-link {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.78rem 1.6rem;
+      border-radius: 6px;
+      font-size: 0.95rem; font-weight: 600;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      transition: background 0.2s, border-color 0.2s;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .contact-link:hover { background: rgba(255,255,255,0.3); border-color: #fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #2a1a2c;
+      color: #d6c5d1;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: 0.12s; }
+    .delay-2 { animation-delay: 0.24s; }
+    .delay-3 { animation-delay: 0.36s; }
+    .delay-4 { animation-delay: 0.5s; }
+
+    /* ── SCREEN-READER ONLY (a11y) ── */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 980px) {
+      nav { padding: 1rem 2rem; }
+      .nav-links { gap: 1.4rem; }
+      section { padding: 4rem 2rem; }
+      .hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; gap: 2.5rem; }
+      .hero::before { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .interests-grid { grid-template-columns: 1fr 1fr; }
+      .honors-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .interests-grid, .honors-grid, .gallery-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; align-items: stretch; }
+      .btn-primary, .btn-outline { text-align: center; }
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { gap: 0.9rem; }
+      .nav-links a { font-size: 0.78rem; }
+      .nav-logo { font-size: 0.95rem; }
+      section { padding: 3.5rem 1.5rem; }
+      #contact { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SKIP LINK (a11y) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- NAV -->
+  <nav aria-label="Primary navigation">
+    <a href="#" class="nav-logo">Jasmine McKenzie</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#interests-section">Research</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#research">Publications</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero-text">
+      <p class="hero-eyebrow fade-in">PhD Student · Human-Centered Computing</p>
+      <h1 id="hero-heading" class="fade-in delay-1">Jasmine<br><em>McKenzie</em></h1>
+      <p class="hero-subtitle fade-in delay-2">
+        5th-year PhD student at the University of Florida advancing health equity through culturally relevant, technology-based health literacy interventions for the Black community.
+      </p>
+      <div class="hero-ctas fade-in delay-3">
+        <a href="https://drive.google.com/file/d/1QtGf0kikrQVkpFnKEiOdCiFhOk5QSFm4/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-primary">Download CV<span class="sr-only"> (opens in new tab)</span></a>
+        <a href="#contact" class="btn-outline">Get in Touch</a>
+      </div>
+    </div>
+    <aside class="hero-card fade-in delay-4" aria-label="Profile summary">
+      <div class="hero-card-header">
+        <div class="avatar" aria-hidden="true">JM</div>
+        <div>
+          <p class="hero-card-name">Jasmine McKenzie</p>
+          <p class="hero-card-role">HCC PhD Candidate · Researcher · Educator</p>
+        </div>
+      </div>
+      <dl class="stat-grid">
+        <div class="stat-item">
+          <dt class="stat-label">Students Taught</dt>
+          <dd class="stat-num">900+</dd>
+        </div>
+        <div class="stat-item">
+          <dt class="stat-label">Students Mentored</dt>
+          <dd class="stat-num">12</dd>
+        </div>
+        <div class="stat-item">
+          <dt class="stat-label">Published Papers</dt>
+          <dd class="stat-num">5</dd>
+        </div>
+        <div class="stat-item">
+          <dt class="stat-label">Years Teaching</dt>
+          <dd class="stat-num">2+</dd>
+        </div>
+      </dl>
+      <ul class="hero-tags" aria-label="Areas of focus">
+        <li class="tag plum">Human-Centered Computing</li>
+        <li class="tag rose">Health Literacy</li>
+        <li class="tag">Embodied Conversational Agents</li>
+        <li class="tag plum">Health Equity</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" aria-labelledby="about-heading">
+    <p class="section-label">About Me</p>
+    <div class="about-grid">
+      <div class="about-text">
+        <h2 id="about-heading">Building inclusive technology<br>for meaningful change.</h2>
+        <p style="margin-top:1.5rem;">
+          I am a Ph.D. student in <strong>Human-Centered Computing at the University of Florida</strong>, focusing on inclusive technology and health literacy. My work is driven by a passion for creating meaningful change by addressing the needs of underserved communities.
+        </p>
+        <p>
+          My research focuses on advancing health equity through culturally relevant, technology-based health literacy interventions for the Black community. Grounded in <strong>public health and health education frameworks</strong>, I emphasize the importance of community-specific approaches—such as stakeholder involvement, trust-building, and tailored learning styles—before developing interventions.
+        </p>
+        <p>
+          I am currently working on using <strong>embodied conversational agents (ECAs)</strong> for patient-centered care in order to educate the Black community on chronic health issues that disproportionately affect them. By leveraging virtual agents, I hope to foster trust and foundational knowledge, which are both essential for achieving long-term health equity in marginalized communities.
+        </p>
+        <h3 style="font-family:'Lora',serif; margin:1.8rem 0 0.8rem; font-size:1.05rem; color:var(--plum);">Soft Skills</h3>
+        <ul class="interests-list">
+          <li>Team Leadership &amp; Project Management</li>
+          <li>Communication &amp; Public Speaking</li>
+          <li>Problem Solving &amp; Time Management</li>
+          <li>Data Analysis &amp; Research Methods</li>
+        </ul>
+      </div>
+      <aside class="about-aside" aria-label="Education and skills">
+        <h3>Education</h3>
+        <div class="edu-item">
+          <p class="edu-degree">Ph.D. in Human-Centered Computing</p>
+          <p class="edu-school">University of Florida, Gainesville, FL</p>
+          <p class="edu-year">2021 – Present</p>
+          <p class="edu-extra">Advisor: Dr. Juan E. Gilbert</p>
+        </div>
+        <div class="edu-item" style="padding-top:1.2rem; border-top:1px solid var(--sand);">
+          <p class="edu-degree">B.S. in Computer Science</p>
+          <p class="edu-school">Claflin University, Orangeburg, SC</p>
+          <p class="edu-year">2017 – 2021</p>
+          <p class="edu-extra">Minor: Psychology · GPA: 3.89</p>
+        </div>
+        <div class="edu-item" style="padding-top:1.2rem; border-top:1px solid var(--sand);">
+          <p class="edu-degree">High School Diploma</p>
+          <p class="edu-school">Anniston High School, Anniston, AL</p>
+          <p class="edu-year">2013 – 2017</p>
+          <p class="edu-extra">GPA: 4.2</p>
+        </div>
+        <div style="margin-top:2rem;">
+          <h3>Focus Areas</h3>
+          <ul class="skills-cloud">
+            <li class="tag plum">HCC / HCI</li>
+            <li class="tag rose">Health Literacy</li>
+            <li class="tag plum">Chatbots &amp; ECAs</li>
+            <li class="tag">UX Design</li>
+            <li class="tag rose">Accessibility</li>
+            <li class="tag plum">CS Education</li>
+            <li class="tag">AI Ethics</li>
+            <li class="tag rose">NLP</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- RESEARCH INTERESTS -->
+  <section id="interests-section" aria-labelledby="interests-heading">
+    <p class="section-label">Research Interests</p>
+    <h2 id="interests-heading">What I work on.</h2>
+    <p class="section-intro">My research sits at the intersection of health, equity, and technology — with three core threads guiding my work.</p>
+    <ul class="interests-grid">
+      <li class="interest-card">
+        <div class="interest-icon" aria-hidden="true">🏥</div>
+        <h3>Consumer Health Informatics</h3>
+        <p>Exploring digital solutions to improve health literacy and access to healthcare information.</p>
+        <ul class="interest-tags">
+          <li class="tag rose">Digital Health</li>
+          <li class="tag rose">Health Literacy</li>
+          <li class="tag rose">Patient Facing</li>
+        </ul>
+      </li>
+      <li class="interest-card">
+        <div class="interest-icon" aria-hidden="true">🎓</div>
+        <h3>Computer Science Education</h3>
+        <p>Advancing computer science departments at HBCUs and PBIs by encouraging new electives, minors, and majors.</p>
+        <ul class="interest-tags">
+          <li class="tag plum">HCC</li>
+          <li class="tag plum">Curriculum Development</li>
+          <li class="tag plum">HBCU</li>
+        </ul>
+      </li>
+      <li class="interest-card">
+        <div class="interest-icon" aria-hidden="true">⚖️</div>
+        <h3>AI Ethics</h3>
+        <p>Focused on explaining AI ethics to users, studying AI usage patterns, and exploring ethical methods for utilizing LLMs and other AI tools.</p>
+        <ul class="interest-tags">
+          <li class="tag">Patterns</li>
+          <li class="tag">Solutions</li>
+          <li class="tag">Technology</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" aria-labelledby="experience-heading">
+    <p class="section-label">Experience</p>
+    <h2 id="experience-heading">Professional Experience</h2>
+    <p class="section-intro">Research, teaching, and service roles that have shaped my path as an HCC scholar.</p>
+
+    <div class="exp-tabs" role="tablist" aria-label="Experience categories">
+      <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-research" id="tab-btn-research" onclick="switchTab(event,'research')"><span aria-hidden="true">🔬</span> Research</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-teaching" id="tab-btn-teaching" tabindex="-1" onclick="switchTab(event,'teaching')"><span aria-hidden="true">🎓</span> Teaching</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-service" id="tab-btn-service" tabindex="-1" onclick="switchTab(event,'service')"><span aria-hidden="true">🤝</span> Service</button>
+    </div>
+
+    <!-- RESEARCH TAB -->
+    <div class="exp-tab-content active" id="tab-research" role="tabpanel" aria-labelledby="tab-btn-research" tabindex="0">
+      <ol class="timeline">
+        <li class="timeline-item">
+          <p class="timeline-date">May 2022 – Present</p>
+          <h3 class="timeline-role">Research Assistant</h3>
+          <p class="timeline-org">Computing for Social Good Lab · Gainesville, FL</p>
+          <p class="timeline-project">Project: Exploring the Interdisciplinary Design Approaches to Technological Health Literacy Interventions</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Conducted a comprehensive review of technological interventions aimed at improving health literacy, resulting in a paper analyzing the success and backing of the interventions and end-user involvement.</li>
+              <li>Identified the need for community-specific measures such as determining community needs, involving stakeholders, building trust, and understanding learning styles before creating health literacy interventions for the Black community.</li>
+              <li>Discovered that conversational agents and mobile apps were popular intervention methods in the studies reviewed, with potential for use in the Black community.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag rose">Scoping Review</li>
+            <li class="tag rose">Health Literacy</li>
+            <li class="tag">UX Design</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">May 2023 – July 2023</p>
+          <h3 class="timeline-role">Visiting Researcher</h3>
+          <p class="timeline-org">Pacific Northwest National Laboratory · Richland, WA</p>
+          <p class="timeline-project">Projects: Trust in Generative Language Models · Effect of Expert Explanation on ML Performance Prediction</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Surveyed common trust violations between Human-AI teams, specifically when using generative language models in the workplace.</li>
+              <li>Examined the techniques used to mitigate and restore trust to improve reliance on generative language models in Human-AI teams.</li>
+              <li>Designed a within-subjects study focused on evaluating the effects of expert-derived confidence scores and verbal explanations on people's understanding of an ML classifier's performance.</li>
+              <li>Developed a survey to determine if expert-derived verbal explanations were more effective at helping electrical grid operators predict the classifier's performance than confidence scores.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag plum">Human-AI Teams</li>
+            <li class="tag plum">LLMs</li>
+            <li class="tag">Study Design</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">May 2021 – July 2021</p>
+          <h3 class="timeline-role">GEM PhD Intern</h3>
+          <p class="timeline-org">Pacific Northwest National Laboratory · Richland, WA</p>
+          <p class="timeline-project">Project: Cybersecurity Threats in Implantable Medical Devices</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Surveyed cybersecurity threats and vulnerabilities in medical institutions and implantable medical devices, providing insights for risk reduction.</li>
+              <li>Developed a plan for reducing the risk of cyberattacks in healthcare, requiring collaboration across multiple stakeholders.</li>
+              <li>Investigated the impact of basic cybersecurity education and training on healthcare workers' ability to detect potential cybersecurity risks.</li>
+              <li>Contributed to the creation of a safer and more secure healthcare environment through the understanding of cybersecurity risks and the development of mitigation strategies.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag rose">Cybersecurity</li>
+            <li class="tag">Healthcare</li>
+            <li class="tag plum">Medical Devices</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <!-- TEACHING TAB -->
+    <div class="exp-tab-content" id="tab-teaching" role="tabpanel" aria-labelledby="tab-btn-teaching" tabindex="0" hidden>
+      <ol class="timeline">
+        <li class="timeline-item">
+          <p class="timeline-date">August 2025 – Present</p>
+          <h3 class="timeline-role">Teaching Assistant</h3>
+          <p class="timeline-org">University of Florida · Gainesville, FL</p>
+          <p class="timeline-project">Course: Senior Design Project</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Guiding 230+ undergraduate computer science majors across 48 groups through their senior design project.</li>
+              <li>Co-leading class discussions on group collaboration amongst CS teams, opportunities beyond the Bachelor's degree, and the basics of CS research.</li>
+              <li>Designing grading rubrics for 8 assignments.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag plum">Teaching</li>
+            <li class="tag rose">Mentoring</li>
+            <li class="tag">Research</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">June 2025 – August 2025</p>
+          <h3 class="timeline-role">Lead Instructor</h3>
+          <p class="timeline-org">Computing Research Association (CRA)</p>
+          <p class="timeline-project">Course: Pre-Research Experience Course (Pre-REC)</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Co-led this course with 400+ students teaching them the basics of research to help them through their first research experiences.</li>
+              <li>Helped guide these students on various research-based and non-research-based academic opportunities and careers post Bachelor's degree.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag plum">Teaching</li>
+            <li class="tag rose">Mentoring</li>
+            <li class="tag">Research</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">August 2024 – Present</p>
+          <h3 class="timeline-role">Graduate Research Mentor</h3>
+          <p class="timeline-org">University of Florida · Computing for Social Good Lab</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Mentor undergraduate and early-graduate researchers in the Computing for Social Good Lab on study design, methodology, and academic writing.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag rose">Mentoring</li>
+            <li class="tag plum">Research</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">January 2025 – May 2025</p>
+          <h3 class="timeline-role">Graduate Research Consultant</h3>
+          <p class="timeline-org">Claflin University · Orangeburg, SC</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Partnered with Claflin University computer science department faculty members to mentor undergraduate students.</li>
+              <li>Managed 4 undergraduate students across 2 research projects.</li>
+              <li>Mentored undergraduate students on computer science research methodologies.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag rose">Mentoring</li>
+            <li class="tag plum">Research</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">January 2022 – December 2024</p>
+          <h3 class="timeline-role">Lead Teaching Assistant</h3>
+          <p class="timeline-org">University of Florida · Gainesville, FL</p>
+          <p class="timeline-project">Courses: Programming Fundamentals I and II</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Administered exams to students, graded assignments, and managed study sessions in Programming I and II courses.</li>
+              <li>Assisted professor in co-teaching introductory C++, Python, and Java to 900+ undergraduate students.</li>
+              <li>Managed 42 undergraduate Peer Mentors.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag plum">Teaching</li>
+            <li class="tag">Leadership</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <!-- SERVICE TAB -->
+    <div class="exp-tab-content" id="tab-service" role="tabpanel" aria-labelledby="tab-btn-service" tabindex="0" hidden>
+      <ol class="timeline">
+        <li class="timeline-item">
+          <p class="timeline-date">July 2025</p>
+          <h3 class="timeline-role">BICE Paper Reviewer</h3>
+          <p class="timeline-org">Black Issues in Computing Education Symposium 2025</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Reviewed and offered feedback on papers submitted to this conference.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag rose">Peer Review</li>
+            <li class="tag plum">Service</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">June 2023 – Present</p>
+          <h3 class="timeline-role">HBCU Application Guide</h3>
+          <p class="timeline-org">Anniston High School · Anniston, AL</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Teaches socially disadvantaged high school juniors and seniors about the college application process.</li>
+              <li>Assists students with obtaining academic scholarships.</li>
+              <li>50 participants have received college acceptance and 23 have received academic scholarships to HBCUs.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag rose">Outreach</li>
+            <li class="tag plum">Mentoring</li>
+            <li class="tag">HBCU</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">February 2022</p>
+          <h3 class="timeline-role">"Ph.D.? Why Not Me" Panelist</h3>
+          <p class="timeline-org">Claflin University &amp; Benedict College · Orangeburg, SC</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Served on a panel to discuss why minority students should consider attending graduate school, specifically for Ph.D. programs.</li>
+              <li>Spoke to 75 junior and senior Computer Science students about graduate school life, how to apply to Ph.D. programs, when to begin preparing, and how to find and apply for fellowships.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag plum">Speaking</li>
+            <li class="tag rose">Outreach</li>
+          </ul>
+        </li>
+
+        <li class="timeline-item">
+          <p class="timeline-date">February 2022</p>
+          <h3 class="timeline-role">HWCOE Spring Visit</h3>
+          <p class="timeline-org">University of Florida · Gainesville, FL</p>
+          <div class="timeline-desc">
+            <ul>
+              <li>Assisted 20 students on a Spring Visit tour by doing campus walking tour guides and housing/apartment tours.</li>
+              <li>Led a PhD recruit lab tour for the Computing for Social Good Lab.</li>
+            </ul>
+          </div>
+          <ul class="timeline-tags">
+            <li class="tag rose">Recruitment</li>
+            <li class="tag plum">Service</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- RESEARCH / PUBLICATIONS -->
+  <section id="research" aria-labelledby="publications-heading">
+    <p class="section-label">Publications</p>
+    <h2 id="publications-heading">Research Papers</h2>
+    <p class="section-intro">Peer-reviewed work spanning computing education, health-equity research, accessibility, and human-AI interaction.</p>
+    <ol class="papers-list">
+
+      <li class="paper-item">
+        <p class="paper-year"><span class="sr-only">Published in </span>2025</p>
+        <div>
+          <p class="paper-authors">Morrow, N., Irving, A., <strong>McKenzie, J.</strong>, Smith, A., &amp; Gilbert, J.E.</p>
+          <h3 class="paper-title">The Invisible Participants: How Computing Education Research Fails Students with Disabilities <span class="award">Exemplary Award</span></h3>
+          <p class="paper-venue">RESPECT 2025, ACM</p>
+          <a href="https://dl.acm.org/doi/10.1145/3704637.3734739" target="_blank" rel="noopener noreferrer" class="paper-link">View Paper<span class="sr-only"> on ACM Digital Library (opens in new tab)</span></a>
+        </div>
+      </li>
+
+      <li class="paper-item">
+        <p class="paper-year"><span class="sr-only">Published in </span>2025</p>
+        <div>
+          <p class="paper-authors">Thomas, S.V., <strong>McKenzie, J.</strong>, Smith, A., &amp; Gilbert, J.E.</p>
+          <h3 class="paper-title">User-Centered Design for Career and Academic Motivation in Student-Athletes</h3>
+          <p class="paper-venue">Learning and Collaboration Technologies, HCII 2025 · Springer</p>
+          <a href="https://doi.org/10.1007/978-3-031-93564-0_11" target="_blank" rel="noopener noreferrer" class="paper-link">View Paper<span class="sr-only"> on Springer (opens in new tab)</span></a>
+        </div>
+      </li>
+
+      <li class="paper-item">
+        <p class="paper-year"><span class="sr-only">Published in </span>2024</p>
+        <div>
+          <p class="paper-authors">Gilbert, J.E., <strong>McKenzie, J.</strong>, Smith, A., Jennings, J., &amp; Hart, A.</p>
+          <h3 class="paper-title">Two-Step Ballot Verification: Mitigating the Impact of the Hawthorne Effect on Vote-Flipping Studies</h3>
+          <p class="paper-venue">Human Factors and Ergonomics Society (HFES) Annual Meeting</p>
+          <a href="https://doi.org/10.1177/10711813241279792" target="_blank" rel="noopener noreferrer" class="paper-link">View Paper<span class="sr-only"> (opens in new tab)</span></a>
+        </div>
+      </li>
+
+      <li class="paper-item">
+        <p class="paper-year"><span class="sr-only">Published in </span>2024</p>
+        <div>
+          <p class="paper-authors">McNamara, K., Hart, A.B., Morrow, N., <strong>McKenzie, J.</strong>, &amp; Gilbert, J.E.</p>
+          <h3 class="paper-title">Plain Language to Address Dimensionality in Feature-Contribution Explanations for End-Users</h3>
+          <p class="paper-venue">HCI International 2024 Posters, HCII 2024 · Springer</p>
+          <a href="https://doi.org/10.1007/978-3-031-62110-9_21" target="_blank" rel="noopener noreferrer" class="paper-link">View Paper<span class="sr-only"> on Springer (opens in new tab)</span></a>
+        </div>
+      </li>
+
+      <li class="paper-item">
+        <p class="paper-year"><span class="sr-only">Published in </span>2023</p>
+        <div>
+          <p class="paper-authors">Gilbert, J.E., <strong>McKenzie, J.</strong>, Smith, A., &amp; Thompson, L.</p>
+          <h3 class="paper-title">Evaluating New Technology for Equitable and Secure Voter Verification</h3>
+          <p class="paper-venue">Tech Policy Press · Technology and Democracy</p>
+          <a href="https://www.techpolicy.press/evaluating-new-technology-for-equitable-and-secure-voter-verification/" target="_blank" rel="noopener noreferrer" class="paper-link">Read Article<span class="sr-only"> on Tech Policy Press (opens in new tab)</span></a>
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- HONORS -->
+  <section id="honors" aria-labelledby="honors-heading">
+    <p class="section-label">Recognition</p>
+    <h2 id="honors-heading">Honors &amp; Awards</h2>
+    <p class="section-intro">Certifications, training, and recognitions from across my academic journey.</p>
+    <ul class="honors-grid">
+      <li class="honor-card">
+        <h3 class="honor-name">UR2PhD Graduate Student Mentor Training</h3>
+        <p class="honor-org">Computing Research Association · 2025</p>
+        <p class="honor-desc">Certificate to celebrate my commitment to mentoring researchers in the field of computing.</p>
+        <a href="https://drive.google.com/file/d/1DVA8Qe4mqyecaoucEXS9GlV9sSz6SN1Z/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="honor-link">See Certificate<span class="sr-only"> (opens in new tab)</span></a>
+      </li>
+      <li class="honor-card">
+        <h3 class="honor-name">Teaching Excellence Academy</h3>
+        <p class="honor-org">University of Florida · 2025</p>
+        <p class="honor-desc">Completed the TEA designed to help faculty adapt and use time-saving teaching strategies to focus and invigorate their teaching practice.</p>
+        <a href="https://www.credly.com/badges/697910f2-f015-4109-a70b-132bdf109392/public_url" target="_blank" rel="noopener noreferrer" class="honor-link">See Badge<span class="sr-only"> (opens in new tab)</span></a>
+      </li>
+      <li class="honor-card">
+        <h3 class="honor-name">Great Teaching for New Faculty Certificate</h3>
+        <p class="honor-org">University of Florida · 2025</p>
+        <p class="honor-desc">Completing a training course that equips new faculty with resources, instructional strategies, and advice to create a great learning experience for students.</p>
+      </li>
+      <li class="honor-card">
+        <h3 class="honor-name">Graduate Student Mentor Training</h3>
+        <p class="honor-org">Computing Research Association · 2025</p>
+        <p class="honor-desc">Gained experience in and understanding of culturally-responsive mentorship.</p>
+      </li>
+      <li class="honor-card">
+        <h3 class="honor-name">McKnight Doctoral Fellowship</h3>
+        <p class="honor-org">Florida Education Fund · 2021</p>
+        <p class="honor-desc">Recognized as a McKnight Doctoral Fellow supporting underrepresented scholars pursuing the Ph.D. in Florida.</p>
+      </li>
+      <li class="honor-card">
+        <h3 class="honor-name">RESPECT 2025 Exemplary Paper Award</h3>
+        <p class="honor-org">ACM RESPECT · 2025</p>
+        <p class="honor-desc">Co-authored paper recognized for its contribution on disability and computing education research.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" aria-labelledby="gallery-heading">
+    <p class="section-label">Moments</p>
+    <h2 id="gallery-heading">Gallery</h2>
+    <p class="section-intro">Conferences, convenings, and community moments from my journey through the academy.</p>
+    <ul class="gallery-grid">
+      <li class="gallery-item">
+        <img class="gallery-img" src="https://iamjasminemckenzie.com/wp-content/uploads/2025/07/Communing-1024x768.jpg" alt="A group of approximately 36 Black women researchers gathered for a group photo at the Black Women in Tech Convening." loading="lazy" width="1024" height="768" />
+        <div class="gallery-caption">
+          <h3 class="gallery-title">Black Women in Tech Convening</h3>
+          <p class="gallery-desc">A group of 36 researchers convened in support of an NSF Project aimed at establishing a research agenda on Black women and girls in computing.</p>
+        </div>
+      </li>
+      <li class="gallery-item">
+        <img class="gallery-img" src="https://iamjasminemckenzie.com/wp-content/uploads/2025/07/howard-day-1024x682.jpg" alt="Members of the Computing for Social Good Lab and University of Florida staff posing together at Howard University's research demonstration day." loading="lazy" width="1024" height="682" />
+        <div class="gallery-caption">
+          <h3 class="gallery-title">Howard University Research Day</h3>
+          <p class="gallery-desc">Computing for Social Good Lab and UF staff gather at Howard University to demo new tech and recruit undergrads.</p>
+        </div>
+      </li>
+      <li class="gallery-item">
+        <img class="gallery-img" src="https://iamjasminemckenzie.com/wp-content/uploads/2025/07/IMG_0215.heic-1024x768.jpg" alt="University of Florida graduate students gathered at the Edward A. Bouchet Fall Forum hosted at Howard University." loading="lazy" width="1024" height="768" />
+        <div class="gallery-caption">
+          <h3 class="gallery-title">Edward A. Bouchet Forum 2024</h3>
+          <p class="gallery-desc">University of Florida graduate students attend the Edward A. Bouchet Fall Forum at Howard University.</p>
+        </div>
+      </li>
+      <li class="gallery-item">
+        <img class="gallery-img" src="https://iamjasminemckenzie.com/wp-content/uploads/2025/07/IMG_1540.jpg" alt="A group photo of McKnight Fellowship recipients from the 2021 conference." loading="lazy" />
+        <div class="gallery-caption">
+          <h3 class="gallery-title">McKnight Fellowship Conference</h3>
+          <p class="gallery-desc">McKnight Fellowship recipients gather for a photo at the 2021 conference.</p>
+        </div>
+      </li>
+      <li class="gallery-item">
+        <img class="gallery-img" src="https://iamjasminemckenzie.com/wp-content/uploads/2025/07/IMG_8135-1024x675.jpg" alt="Jasmine McKenzie attending a professional networking lunch in Washington, D.C." loading="lazy" width="1024" height="675" />
+        <div class="gallery-caption">
+          <h3 class="gallery-title">Networking in DC</h3>
+          <p class="gallery-desc">Jasmine attends a networking lunch in Washington, D.C.</p>
+        </div>
+      </li>
+      <li class="gallery-item">
+        <img class="gallery-img" src="https://iamjasminemckenzie.com/wp-content/uploads/2025/07/Communing-1024x768.jpg" alt="Computing for Social Good Lab members welcoming new students to the lab community." loading="lazy" width="1024" height="768" />
+        <div class="gallery-caption">
+          <h3 class="gallery-title">New Students Welcome</h3>
+          <p class="gallery-desc">Computing for Social Good Lab welcomes new students into the lab community.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" aria-labelledby="contact-heading">
+    <p class="section-label">Contact</p>
+    <h2 id="contact-heading">Let's connect.</h2>
+    <p class="section-intro">Open to research collaborations, fellowship conversations, internships, and speaking with anyone working on technology that matters.</p>
+    <div class="contact-links">
+      <a href="mailto:jasminemckenzie@ufl.edu" class="contact-link"><span aria-hidden="true">📧</span> jasminemckenzie@ufl.edu</a>
+      <a href="https://drive.google.com/file/d/1QtGf0kikrQVkpFnKEiOdCiFhOk5QSFm4/view?usp=sharing" class="contact-link" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">📄</span> Download CV<span class="sr-only"> (opens in new tab)</span></a>
+      <a href="#" class="contact-link" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
+    </div>
+  </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 Jasmine McKenzie · All rights reserved</p>
+  </footer>
+
+  <script>
+    function switchTab(e, id) {
+      const btn = e.currentTarget;
+      const parent = btn.closest('section');
+      parent.querySelectorAll('.tab-btn').forEach(b => {
+        b.setAttribute('aria-selected', 'false');
+        b.setAttribute('tabindex', '-1');
+      });
+      parent.querySelectorAll('.exp-tab-content').forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('hidden', '');
+      });
+      btn.setAttribute('aria-selected', 'true');
+      btn.setAttribute('tabindex', '0');
+      const panel = document.getElementById('tab-' + id);
+      panel.classList.add('active');
+      panel.removeAttribute('hidden');
+    }
+
+    // Keyboard arrow navigation for tabs (WAI-ARIA pattern)
+    const tabList = document.querySelector('[role="tablist"]');
+    if (tabList) {
+      const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+      tabList.addEventListener('keydown', (e) => {
+        const current = document.activeElement;
+        const idx = tabs.indexOf(current);
+        if (idx === -1) return;
+        let next = null;
+        if (e.key === 'ArrowRight') next = tabs[(idx + 1) % tabs.length];
+        else if (e.key === 'ArrowLeft') next = tabs[(idx - 1 + tabs.length) % tabs.length];
+        else if (e.key === 'Home') next = tabs[0];
+        else if (e.key === 'End') next = tabs[tabs.length - 1];
+        if (next) {
+          e.preventDefault();
+          next.focus();
+          next.click();
+        }
+      });
+    }
+
+    // Scroll-triggered fade-ins (respects prefers-reduced-motion via CSS)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.interest-card, .paper-item, .timeline-item, .honor-card, .gallery-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
